@@ -1,26 +1,51 @@
 import React from 'react';
-import logo from './logo.svg';
+import {
+	BrowserRouter as Router,
+	Switch,
+	Route,
+  } from "react-router-dom";
+import { LayoutComponent } from './Components/LayoutComponent';
+import { Loader } from './Components/Loader';
+import { PaginationComponent } from './Components/PaginationComponent';
+import { CharactersList } from './Components/CharactersList';
+import { Location } from './Components/Location';
+import { Episode } from './Components/Episode';
+
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+export const App = () => {
+	
 
-export default App;
+	
+
+	return (
+		<Router>
+			<LayoutComponent>
+				<Switch>
+					<Route exact path="/">
+						<CharactersList/>
+					</Route>
+					<Route path="/Location">
+						<Location/>
+					</Route>
+					<Route path="/Episode" >
+						<Episode/>
+					</Route>
+					{/* <Route path="/:id" children={<Child />} /> */}
+					
+				</Switch> 
+				<Loader/>
+			</LayoutComponent>
+			{/* <PaginationComponent/>		 */}
+		</Router>
+	);
+};
+
+// function Child() {
+// 	let { id }: any = useParams();
+
+// 	// console.log(id);
+	
+  
+// 	return null
+//   }
