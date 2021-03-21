@@ -1,4 +1,4 @@
-type InfoType = {
+export type InfoType = {
 	count: number
 	pages: number
 	next: string | null

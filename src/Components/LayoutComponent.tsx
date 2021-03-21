@@ -1,28 +1,36 @@
-import React from 'react';
-import { Menu } from 'antd';
-import Layout, { Content, Header } from 'antd/lib/layout/layout';
+import React, { useEffect, useState } from 'react';
+import Layout, { Content } from 'antd/lib/layout/layout';
+import { HeaderComponent } from './HeaderComponent';
+import { FilterAndSearch } from './FilterAndSearch';
+import { getCharactersListFromServer } from '../redux/action';
+import { useDispatch, useSelector } from 'react-redux';
+import { useHistory, useLocation } from 'react-router-dom';
+import { AppStateType } from '../redux/rootReducer';
 
-import {
-	// eslint-disable-next-line
-	BrowserRouter as Router,
-	Link,
-  } from "react-router-dom";
+type LayoutComponentType = {
+	children: JSX.Element | JSX.Element[]
+};
 
-export const LayoutComponent = (props: any) => {
+export const LayoutComponent: React.FC<LayoutComponentType> = props => {
+	const params = useSelector((state: AppStateType) => state.app.params);
+	const updateParams = useSelector((state: AppStateType) => state.app.isloader);
+	let history = useHistory();
+	let location = useLocation();
 
+	useEffect(() => { 
+		if (location.pathname === '/') return;
+		history.push(`${location.pathname}${params}`)
+	}, [updateParams])
+
+
+	console.log('location', location)
 	return (
 		<Layout className="layout">
-			<Header>
-				<Menu theme="dark" mode="horizontal" defaultSelectedKeys={['1']}>
-					<Menu.Item key="1"><Link to="/"> Character</Link></Menu.Item>
-					<Menu.Item key="2"><Link to="/Location">Location</Link></Menu.Item>
-					<Menu.Item key="3"><Link to="/Episode">Episode</Link></Menu.Item>
-				</Menu>
-			</Header>
-				<Content style={{ padding: '50px', height: 'auto'}}>
-					{props.children}
-				</Content>
-			
+			<HeaderComponent/>
+			<Content style={{ padding: '50px' }}>
+			{/* <FilterAndSearch/> */}
+				{props.children}
+			</Content>
 		</Layout>
 	);
 };

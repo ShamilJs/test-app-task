@@ -1,51 +1,41 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import {
 	BrowserRouter as Router,
 	Switch,
 	Route,
+	Redirect,
+	useHistory,
+	useLocation,
   } from "react-router-dom";
 import { LayoutComponent } from './Components/LayoutComponent';
 import { Loader } from './Components/Loader';
-import { PaginationComponent } from './Components/PaginationComponent';
 import { CharactersList } from './Components/CharactersList';
 import { Location } from './Components/Location';
 import { Episode } from './Components/Episode';
-
 import './App.css';
+import { useSelector } from 'react-redux';
+import { AppStateType } from './redux/rootReducer';
 
-export const App = () => {
-	
-
+export const App: React.FC = () => {
 	
 
 	return (
 		<Router>
 			<LayoutComponent>
 				<Switch>
-					<Route exact path="/">
+					<Redirect exact from="/" to="/character"/>
+					<Route path="/character">
 						<CharactersList/>
 					</Route>
-					<Route path="/Location">
+					<Route path="/location">
 						<Location/>
 					</Route>
-					<Route path="/Episode" >
+					<Route path="/episode" >
 						<Episode/>
 					</Route>
-					{/* <Route path="/:id" children={<Child />} /> */}
-					
 				</Switch> 
 				<Loader/>
 			</LayoutComponent>
-			{/* <PaginationComponent/>		 */}
 		</Router>
 	);
 };
-
-// function Child() {
-// 	let { id }: any = useParams();
-
-// 	// console.log(id);
-	
-  
-// 	return null
-//   }

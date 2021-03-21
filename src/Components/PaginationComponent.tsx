@@ -1,27 +1,35 @@
-import { Pagination } from 'antd';
 import React, { useEffect, useState } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useHistory } from 'react-router-dom';
+import { Pagination } from 'antd';
+import { InfoType } from '../types/types';
 
-export const PaginationComponent = () => {
-	let location = useLocation()
-	console.log(location.pathname);
-	const [pageNumber, setPageNumber] = useState(1)
-	// let pageNumber: any = JSON.parse(localStorage.getItem('cart') || '')
-	console.log(pageNumber);
+type TargetPropsType = {
+	handlePage: (newPage: number) => void
+	info: InfoType
+};
+
+export const PaginationComponent: React.FC<TargetPropsType> = ({ handlePage, info }) => {
+	const [saveLocation, setSaveLocation] = useState('');
+	const [currentPage, setCurrentPage] = useState(1);
+	
+	let location = useLocation();
+	let history = useHistory();
 	
 	useEffect(() => {
-		if (!localStorage.getItem(`${location.pathname}`) || '') {
-			localStorage.setItem(`${location.pathname}`, JSON.stringify(pageNumber));
-		} else {
-			setPageNumber(+JSON.parse(localStorage.getItem(`${location.pathname}`) || ''))
-		}
-		// eslint-disable-next-line 
-	}, [])
+		setSaveLocation(location.pathname);
+		// history.push(`${location.pathname}/?page=1`)
+		// eslint-disable-next-line
+	}, []);
+	
+	useEffect(() => {
+		let locationSearch = +(location.search.split('page='))[(location.search.split('page=')).length-1];
+		if (!location.search) setCurrentPage(1);
+		else setCurrentPage(locationSearch);
+		handlePage(locationSearch);
+		// eslint-disable-next-line
+	}, [location.search]);
 
-	const handleChange = (page: number) => {
-		setPageNumber(pageNumber => page)
-		localStorage.setItem(`${location.pathname}`, JSON.stringify(page));
-	}
+	const handleChange = (page: number) => history.push(`${saveLocation}/?page=${page}`);
 
 	return (
 		<div className="pagination">
@@ -29,9 +37,11 @@ export const PaginationComponent = () => {
 				style={{ margin: '0 0 100px 0', padding: '50px 0 50px 0' }}
 				showSizeChanger={false}
 				onChange={handleChange}
-				defaultCurrent={pageNumber}
-				total={500}
+				current={currentPage}
+				defaultCurrent={1}
+				total={info?.count ? info?.count / 2 : 40}
 			/>
 		</div>
-		)
-	}
+	);
+};
+

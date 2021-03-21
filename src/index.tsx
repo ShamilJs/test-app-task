@@ -21,9 +21,9 @@ const store = createStore(rootReducer,
 
 const app = (
 	<Provider store={store}>
-		<React.StrictMode>
+		<>
 			<App />
-		</React.StrictMode>
+		</>
 	</Provider>
 );
 
