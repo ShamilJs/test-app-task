@@ -6,15 +6,12 @@ import {
 	Redirect
   } from "react-router-dom";
 import { LayoutComponent } from './Components/LayoutComponent';
-import { Loader } from './Components/Loader';
 import { CharactersList } from './Components/CharactersList';
-import { Location } from './Components/Location';
-import { Episode } from './Components/Episode';
+import { LocationList } from './Components/LocationList';
+import { EpisodeList } from './Components/EpisodeList';
 import './App.css';
 
 export const App: React.FC = () => {
-	
-
 	return (
 		<Router>
 			<LayoutComponent>
@@ -24,13 +21,12 @@ export const App: React.FC = () => {
 						<CharactersList/>
 					</Route>
 					<Route path="/location">
-						<Location/>
+						<LocationList/>
 					</Route>
 					<Route path="/episode" >
-						<Episode/>
+						<EpisodeList/>
 					</Route>
 				</Switch> 
-				<Loader/>
 			</LayoutComponent>
 		</Router>
 	);

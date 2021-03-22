@@ -1,15 +1,15 @@
 import { combineReducers } from "redux";
-import { characterReducer } from "./characterReducer";
+import { contentReducer } from "./contentReducer";
 import { appReducer } from "./appReducer";
 
 
-
 export const rootReducer = combineReducers({
-	character: characterReducer,
+	content: contentReducer,
 	app: appReducer,
 });
 
 type RootReducerType = typeof rootReducer;
-export type AppStateType = ReturnType<RootReducerType>
+
+export type AppStateType = ReturnType<RootReducerType>;
 
 

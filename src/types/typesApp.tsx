@@ -11,6 +11,7 @@ type OriginAndLocationType = {
 }
 
 export type ResultsItemType = {
+	dimension?: string
 	id: number
 	name: string
 	status: string
@@ -25,8 +26,18 @@ export type ResultsItemType = {
 	created: string
   }
 
-export type CharacterListType = {
+export type DataListType = {
 	info: InfoType
 	results: Array<ResultsItemType>
+}
+
+export type LocationType = {
+	pathname: string
+	page: number
+	name: string
+	status: string
+	gender: string
+	type?: string
+	dimension?: string
 }
 

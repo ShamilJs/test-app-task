@@ -4,8 +4,7 @@ import { AppStateType } from '../redux/rootReducer';
 import { ResultsItemType } from '../types/typesApp';
 import { CardComponent } from './CardComponent';
 
-
-export const CharactersList: React.FC = () => {
+export const LocationList = () => {
 	const list = useSelector((state: AppStateType) => state.content.data);
 	
 	return (

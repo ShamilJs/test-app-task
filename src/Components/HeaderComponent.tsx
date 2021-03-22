@@ -10,13 +10,10 @@ export const HeaderComponent: React.FC = () => {
 
 	useMemo(() => {
 		const keyPath =
-		(location.pathname.split('/'))[1] === "character" ? ["1"] :
-		(location.pathname.split('/'))[1] === "location" ? ["2"] : 
-		(location.pathname.split('/'))[1] === "episode" ? ["3"] : ["1"];
-		
-		// console.log((location.pathname.split('/'))[1]);
-		
-		setActualKey(keyPath)
+			(location.pathname.split('/'))[1] === "character" ? ["1"] :
+			(location.pathname.split('/'))[1] === "location" ? ["2"] : 
+			(location.pathname.split('/'))[1] === "episode" ? ["3"] : ["1"];
+		setActualKey(keyPath);
 	}, [location.pathname]);
 
 	return (

@@ -1,30 +1,36 @@
-import React from 'react';
-import { Input, Select } from 'antd';
+import React, { useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
+import { Input } from 'antd';
+import { formationOfParams } from './Functions/functions';
+import { SelectComponent } from './SelectComponent';
+import { LocationType } from '../types/typesApp';
 
-type TargetPropsType = {
-	pathname: string
-	page: number
-	name: string
-	status: string
-};
 
-export const FilterAndSearch: React.FC<TargetPropsType> = props => {
+export const FilterAndSearch: React.FC<LocationType> = props => {
 	let history = useHistory();
+	const [value, setValue] = useState('');
 
-	const { Option } = Select;
+	const { children, ...location } = props;
 
-	const onSearch = (value: string): void => 
-		history.push(`${props.pathname}/?page=1&name=${value}&status=${props.status}`);
+	useEffect(() => {
+		setValue(props.name);
+		// eslint-disable-next-line
+	}, [location.name])
 
-	const handleChange = (value: string): void => {
-		const statusValue = value === 'not selected' ? '' : value;
-		history.push(`${props.pathname}/?page=1&name=${props.name}&status=${statusValue}`);
+	const currentLocation = (): void => {
+		location.page =  1;
+		const params: string = formationOfParams({ ...location });
+		history.push(params);
+	};
+
+	const onSearch = (value: string): void => {
+		location.name =  value;
+		currentLocation();
 	};
 
 	return (
 		<Input.Group compact
-			style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+			style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '40px'}}>
 			<Input.Search
 				style={{ width: '50%' }}
 				placeholder="input search text"
@@ -32,18 +38,23 @@ export const FilterAndSearch: React.FC<TargetPropsType> = props => {
 				enterButton
 				size="large"
 				allowClear={true}
+				value={value}
+				onChange={(e) => setValue(e.target.value)}
 			/>
-			<Select
-				defaultValue="not selected"
-				onChange={handleChange}
-				style={{ width: '15%', marginLeft: '20px' }} size="large"
-				value={props.status}
-			>
-				<Option value="not selected">Not selected</Option>
-				<Option value="alive">Alive</Option>
-				<Option value="dead">Dead</Option>
-				<Option value="unknown">unknown</Option>
-			</Select>
+			{location.pathname === '/character' ?
+				<><SelectComponent
+					{...props}
+					options={['not selected', 'alive', 'dead', 'unknown']}
+					filterName='status'
+					value={props.status}
+				/>
+				<SelectComponent
+					{...props}
+					options={['not selected', 'female', 'male', 'genderless', 'unknown']}
+					filterName='gender'
+					value={props.gender}
+				/></> : null
+			}
 		</Input.Group>
 	);
 };
