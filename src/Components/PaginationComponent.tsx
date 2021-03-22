@@ -4,32 +4,27 @@ import { Pagination } from 'antd';
 import { InfoType } from '../types/types';
 
 type TargetPropsType = {
-	handlePage: (newPage: number) => void
 	info: InfoType
+	pathname: string
+	page: number
+	name: string
+	status: string
 };
 
-export const PaginationComponent: React.FC<TargetPropsType> = ({ handlePage, info }) => {
-	const [saveLocation, setSaveLocation] = useState('');
+export const PaginationComponent: React.FC<TargetPropsType> = props => {
 	const [currentPage, setCurrentPage] = useState(1);
-	
 	let location = useLocation();
 	let history = useHistory();
 	
 	useEffect(() => {
-		setSaveLocation(location.pathname);
-		// history.push(`${location.pathname}/?page=1`)
-		// eslint-disable-next-line
-	}, []);
-	
-	useEffect(() => {
-		let locationSearch = +(location.search.split('page='))[(location.search.split('page=')).length-1];
 		if (!location.search) setCurrentPage(1);
-		else setCurrentPage(locationSearch);
-		handlePage(locationSearch);
+		else setCurrentPage(props.page);
 		// eslint-disable-next-line
-	}, [location.search]);
+	}, [props.page]);
 
-	const handleChange = (page: number) => history.push(`${saveLocation}/?page=${page}`);
+	const handleChange = (page: number) => 
+		history.push(`${props.pathname}/?page=${page}&name=${props.name}&status=${props.status}`);
+
 
 	return (
 		<div className="pagination">
@@ -39,7 +34,7 @@ export const PaginationComponent: React.FC<TargetPropsType> = ({ handlePage, inf
 				onChange={handleChange}
 				current={currentPage}
 				defaultCurrent={1}
-				total={info?.count ? info?.count / 2 : 40}
+				total={props.info?.count ? props.info?.count / 2 : 40}
 			/>
 		</div>
 	);

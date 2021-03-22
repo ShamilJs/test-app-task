@@ -1,5 +1,5 @@
 import { CharacterListType } from '../types/types';
-import { CHANGE_FAVORITES, GET_CHARACTERS_LIST, SHOW_LOADER, GET_PARAMS } from './typesAction';
+import { CHANGE_FAVORITES, GET_CHARACTERS_LIST, SHOW_LOADER, SHOW_ERROR } from './typesAction';
 
 
 // Лоадер
@@ -12,6 +12,21 @@ export const showLoader = (isShow: boolean): ShowLoaderActionType => {
 	return {
 		type: SHOW_LOADER,
 		payload: isShow
+	};
+};
+
+
+type ShowErrorActionType = {
+	type: typeof SHOW_ERROR,
+	payload: boolean
+	message: string
+};
+
+const showError = (isError: boolean, err: ''): ShowErrorActionType => {
+	return {
+		type: SHOW_ERROR,
+		payload: isError,
+		message: err
 	};
 };
 
@@ -33,22 +48,10 @@ type GetCharactersListFromServerType = {
 	name?: string
 	status?: string
 	(dispatch: any): Promise<void>
-}
-
-type GetParamsType = {
-	type: typeof GET_PARAMS
-	payload: string
-}
-
-export const getParams = (params: string): GetParamsType => {
-	return {
-		type: GET_PARAMS,
-		payload: params
-	};
 };
 
-export const getCharactersListFromServer = (page = 1, name = '', status = ''):GetCharactersListFromServerType => (dispatch: any) => {
-	console.log(page);
+export const getCharactersListFromServer = ({page = 1, name = '', status = ''}): GetCharactersListFromServerType => 
+	(dispatch: any) => {
 	
 	const params =
 		(!name && !status) ? `/?page=${page}` : 
@@ -56,24 +59,21 @@ export const getCharactersListFromServer = (page = 1, name = '', status = ''):Ge
 		(name && !status) ? `/?page=${page}&name=${name}` : 
 		`/?page=${page}&name=${name}&status=${status}`;
 
-	dispatch(getParams(params));
 
 	dispatch(showLoader(true));
 	return fetch(`https://rickandmortyapi.com/api/character${params}`)
 		.then(async response => {
-			if (!response.ok) {
-				throw await 'Что-то пошло не так...';
-			}
+			if (!response.ok) throw await response.json();
 			return response.json();
 		})
 		.then(data => {
-			console.log(data);
-			dispatch(getCharactersList(data))
+			dispatch(getCharactersList(data));
+			dispatch(showError(false, ''));
 		})
-		.catch(err => console.log(err))
-		// .catch(err => dispatch(showError(true, err)))
+		.catch(err => dispatch(showError(true, err.error)))
 		.finally(() => dispatch(showLoader(false)))
 };
+
 
 // Управление "Избранным"
 type ChangeFavoritesActionType = {
